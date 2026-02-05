@@ -158,13 +158,20 @@ canvas.height=window.innerHeight;
 
 const confettiInstance=confetti.create(canvas,{resize:true,useWorker:true});
 
-/* Unlock and start music on first user interaction */
+/* Start music on first cursor movement */
 const bgMusic=document.getElementById("bgMusic");
-function startMusic(){
+
+let musicStarted=false;
+
+function startMusicOnHover(){
+  if(musicStarted) return;
+  musicStarted=true;
+
   bgMusic.play().catch(()=>{});
-  window.removeEventListener("pointerdown",startMusic);
+  window.removeEventListener("pointermove",startMusicOnHover);
 }
-window.addEventListener("pointerdown",startMusic);
+
+window.addEventListener("pointermove",startMusicOnHover);
 
 /* Confetti from true center */
 function fireConfetti(){
