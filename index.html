@@ -147,6 +147,13 @@ const dialog=document.getElementById("dialog");
 const question=document.getElementById("question");
 const fineprint=document.getElementById("fineprint");
 const bgMusic=document.getElementById("bgMusic");
+let unlocked=false;
+
+window.addEventListener("pointerdown", () => {
+  if(unlocked) return;
+  unlocked=true;
+  bgMusic.play().catch(()=>{});
+});
 
 const canvas=document.getElementById("confettiCanvas");
 canvas.width=window.innerWidth;
