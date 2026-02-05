@@ -16,15 +16,11 @@ body{
   font-family:'Press Start 2P',cursive;
   display:flex;
   justify-content:center;
-  align-items:flex-start;
-  padding-top:80px;
+  align-items:center;
   overflow:hidden;
-
-  /* GIF background */
   background: url("backgroound.gif") center center / cover no-repeat fixed;
 }
 
-/* Confetti canvas */
 #confettiCanvas{
   position:fixed;
   inset:0;
@@ -120,7 +116,6 @@ button{
 
 <body>
 
-<!-- Background audio (fixed) -->
 <audio id="bgMusic" loop>
   <source src="p2p.mp3" type="audio/mpeg">
 </audio>
@@ -151,6 +146,7 @@ const result=document.getElementById("result");
 const dialog=document.getElementById("dialog");
 const question=document.getElementById("question");
 const fineprint=document.getElementById("fineprint");
+const bgMusic=document.getElementById("bgMusic");
 
 const canvas=document.getElementById("confettiCanvas");
 canvas.width=window.innerWidth;
@@ -158,22 +154,7 @@ canvas.height=window.innerHeight;
 
 const confettiInstance=confetti.create(canvas,{resize:true,useWorker:true});
 
-/* Start music on first cursor movement */
-const bgMusic=document.getElementById("bgMusic");
-
-let musicStarted=false;
-
-function startMusicOnHover(){
-  if(musicStarted) return;
-  musicStarted=true;
-
-  bgMusic.play().catch(()=>{});
-  window.removeEventListener("pointermove",startMusicOnHover);
-}
-
-window.addEventListener("pointermove",startMusicOnHover);
-
-/* Confetti from true center */
+/* Confetti */
 function fireConfetti(){
   const duration=4000;
   const end=Date.now()+duration;
@@ -201,7 +182,9 @@ yesBtn.addEventListener("mouseenter",()=>{
   yesBtn.style.zIndex="2000";
 });
 
-/* NO runs */
+/* NO runs (original logic) + starts music */
+let musicStarted=false;
+
 zone.addEventListener("pointermove",e=>{
   const b=noBtn.getBoundingClientRect();
   const z=zone.getBoundingClientRect();
@@ -209,7 +192,13 @@ zone.addEventListener("pointermove",e=>{
     (b.left+b.width/2)-e.clientX,
     (b.top+b.height/2)-e.clientY
   );
+
   if(dist<60){
+    if(!musicStarted){
+      bgMusic.play().catch(()=>{});
+      musicStarted=true;
+    }
+
     let nl=Math.random()*(z.width-b.width);
     let nt=Math.random()*(z.height-b.height);
     noBtn.style.left=nl+"px";
